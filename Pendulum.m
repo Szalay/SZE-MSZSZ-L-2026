@@ -80,18 +80,64 @@ classdef Pendulum < handle
 			plot(this.t, rad2deg(this.x(:, 2)), "b-", LineWidth=3);
 		end
 
+		function Animate(this)
+			window = figure();
+			window.Color = [1, 1, 1];
+
+			hold on; box on; grid on;
+			
+			% Az ábrázolt rész
+			axis equal;
+			xlim(1.5*this.L*[-1, 1]);
+			ylim(this.L*[-1.75, 0.25]);
+		
+			% Feliratozás
+			pendulumTitle = title("Inga lengése", FontSize=18);
+
+			% A fal felül
+			plot(0.25*this.L*[-1, 1], [0, 0], "k-", LineWidth=2);
+			
+			% Kezdeti állapot
+			pendulum = plot( ...
+				[0, this.L*sin(this.phi_0)], ...
+				[0, -this.L*cos(this.phi_0)], ...
+				"k-", LineWidth=3 ...
+				);
+			drawnow;
+
+			% Animáció
+			for i = 1:length(this.t)
+				if ~ishandle(window)
+					break;
+				end
+
+				phi = this.x(i, 2);
+
+				pendulum.XData = [0, this.L*sin(phi)];
+				pendulum.YData = [0, -this.L*cos(phi)];
+
+				pendulumTitle.String = sprintf( ...
+					"Inga lengése (t = %.1f s)", this.t(i) ...
+					);
+
+				drawnow;
+				pause(0.05);
+			end
+		end
+
 	end
 
 	methods (Static)
 		
 		function Run()
 			%p = Pendulum(0, 25);
-			p = Pendulum(0:0.01:20);
+			p = Pendulum(0:0.05:20);
 
 			p.omega_0 = 1;
 
 			p.Simulate();
-			p.Plot();
+			%p.Plot();
+			p.Animate();
 		end
 
 	end
