@@ -4,6 +4,7 @@ classdef Pendulum < handle
 		% Modellparaméterek
 		m = 1;
 		L = 1;
+		B = 0.2;
 
 		% Kezdeti értékek
 		omega_0 = 0;
@@ -42,7 +43,9 @@ classdef Pendulum < handle
 			omega = x(1);
 			phi = x(2);
 
-			domegadt = -this.m*Pendulum.g*this.L/this.J * sin(phi);
+			domegadt = 1/this.J * ( ...
+				-this.m*Pendulum.g*this.L * sin(phi) - this.B*omega ...
+				);
 			dphidt = omega;
 
 			dxdt = [domegadt; dphidt];
@@ -78,7 +81,7 @@ classdef Pendulum < handle
 	methods (Static)
 		
 		function Run()
-			p = Pendulum(0, 10);
+			p = Pendulum(0, 25);
 
 			p.omega_0 = 1;
 
