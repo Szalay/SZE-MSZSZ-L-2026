@@ -62,7 +62,7 @@ classdef Pendulum < handle
 			% Szögsebesség
 			subplot(2, 1, 1); hold on; grid on; box on;
 			title("Szögsebesség", FontSize=18);
-			xlabel("Idő, t, (s)", FontSize=14);
+			xlabel("Idő, {\itt}, (s)", FontSize=14);
 			ylabel("Szögsebesség, \omega, (rad/s)", FontSize=14);
 
 			plot(this.t, this.x(:, 1), "r-", LineWidth=3);
@@ -70,10 +70,10 @@ classdef Pendulum < handle
 			% Szöghelyzet
 			subplot(2, 1, 2); hold on; grid on; box on;
 			title("Szöghelyzet", FontSize=18);
-			xlabel("Idő, t, (s)", FontSize=14);
-			ylabel("Szöghelyzet, \phi, (rad)", FontSize=14);
+			xlabel("Idő, {\itt}, (s)", FontSize=14);
+			ylabel("Szöghelyzet, \phi, (°)", FontSize=14);
 
-			plot(this.t, this.x(:, 2), "b-", LineWidth=3);
+			plot(this.t, rad2deg(this.x(:, 2)), "b-", LineWidth=3);
 		end
 
 	end

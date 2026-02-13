@@ -4,6 +4,7 @@ classdef Pendulum < handle
 		% Modellparaméterek
 		m = 1;
 		L = 1;
+		B = 0.2;
 
 		% Kezdeti értékek
 		omega_0 = 0;
@@ -26,7 +27,11 @@ classdef Pendulum < handle
 	methods 
 		
 		function this = Pendulum(t_0, t_1)
-			this.t = [t_0, t_1];
+			if nargin == 2
+				this.t = [t_0, t_1];
+			else
+				this.t = t_0;
+			end
 		end
 
 		function J = get.J(this)
@@ -37,12 +42,14 @@ classdef Pendulum < handle
 			x_0 = [this.omega_0; this.phi_0];
 		end
 
-		function dxdt = Model(this, t, ~)
+		function dxdt = Model(this, ~, x)
 			% x = [omega; phi]
 			omega = x(1);
 			phi = x(2);
 
-			domegadt = -this.m*Pendulum.g*this.L/this.J * sin(phi);
+			domegadt = 1/this.J * ( ...
+				-this.m*Pendulum.g*this.L * sin(phi) - this.B*omega ...
+				);
 			dphidt = omega;
 
 			dxdt = [domegadt; dphidt];
@@ -53,7 +60,38 @@ classdef Pendulum < handle
 		end
 
 		function Plot(this)
+			window = figure();
+			window.Color = [1, 1, 1];
 			
+			% Szögsebesség
+			subplot(2, 1, 1); hold on; grid on; box on;
+			title("Szögsebesség", FontSize=18);
+			xlabel("Idő, {\itt}, (s)", FontSize=14);
+			ylabel("Szögsebesség, \omega, (rad/s)", FontSize=14);
+
+			plot(this.t, this.x(:, 1), "r-", LineWidth=3);
+			
+			% Szöghelyzet
+			subplot(2, 1, 2); hold on; grid on; box on;
+			title("Szöghelyzet", FontSize=18);
+			xlabel("Idő, {\itt}, (s)", FontSize=14);
+			ylabel("Szöghelyzet, \phi, (°)", FontSize=14);
+
+			plot(this.t, rad2deg(this.x(:, 2)), "b-", LineWidth=3);
+		end
+
+	end
+
+	methods (Static)
+		
+		function Run()
+			%p = Pendulum(0, 25);
+			p = Pendulum(0);
+
+			p.omega_0 = 1;
+
+			p.Simulate();
+			p.Plot();
 		end
 
 	end
