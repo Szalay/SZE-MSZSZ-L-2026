@@ -27,7 +27,11 @@ classdef Pendulum < handle
 	methods 
 		
 		function this = Pendulum(t_0, t_1)
-			this.t = [t_0, t_1];
+			if nargin == 2
+				this.t = [t_0, t_1];
+			else
+				this.t = t_0;
+			end
 		end
 
 		function J = get.J(this)
@@ -81,7 +85,8 @@ classdef Pendulum < handle
 	methods (Static)
 		
 		function Run()
-			p = Pendulum(0, 25);
+			%p = Pendulum(0, 25);
+			p = Pendulum(0:0.01:20);
 
 			p.omega_0 = 1;
 
